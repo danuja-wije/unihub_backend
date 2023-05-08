@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 1000px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"bipartite": 0, "font": {"color": "white"}, "group": 0, "id": "Python", "label": "Python", "shape": "dot", "size": 7}, {"bipartite": 1, "font": {"color": "white"}, "group": 0, "id": "Alice", "label": "Alice", "shape": "dot", "size": 9}, {"bipartite": 1, "font": {"color": "white"}, "group": 0, "id": "Bob", "label": "Bob", "shape": "dot", "size": 4}, {"bipartite": 1, "font": {"color": "white"}, "group": 0, "id": "Charlie", "label": "Charlie", "shape": "dot", "size": 5}, {"bipartite": 1, "font": {"color": "white"}, "group": 0, "id": "David", "label": "David", "shape": "dot", "size": 5}, {"bipartite": 1, "font": {"color": "white"}, "group": 0, "id": "Eve", "label": "Eve", "shape": "dot", "size": 5}, {"bipartite": 1, "font": {"color": "white"}, "group": 0, "id": "Frank", "label": "Frank", "shape": "dot", "size": 4}, {"bipartite": 1, "font": {"color": "white"}, "group": 0, "id": "Ralph", "label": "Ralph", "shape": "dot", "size": 2}, {"bipartite": 0, "font": {"color": "white"}, "group": 1, "id": "Java", "label": "Java", "shape": "dot", "size": 7}, {"bipartite": 1, "font": {"color": "white"}, "group": 1, "id": "Lily", "label": "Lily", "shape": "dot", "size": 3}, {"bipartite": 1, "font": {"color": "white"}, "group": 1, "id": "Karl", "label": "Karl", "shape": "dot", "size": 2}, {"bipartite": 1, "font": {"color": "white"}, "group": 3, "id": "Quinn", "label": "Quinn", "shape": "dot", "size": 2}, {"bipartite": 1, "font": {"color": "white"}, "group": 1, "id": "Grace", "label": "Grace", "shape": "dot", "size": 3}, {"bipartite": 0, "font": {"color": "white"}, "group": 2, "id": "C++", "label": "C++", "shape": "dot", "size": 7}, {"bipartite": 1, "font": {"color": "white"}, "group": 2, "id": "Nancy", "label": "Nancy", "shape": "dot", "size": 1}, {"bipartite": 1, "font": {"color": "white"}, "group": 3, "id": "Oscar", "label": "Oscar", "shape": "dot", "size": 2}, {"bipartite": 1, "font": {"color": "white"}, "group": 2, "id": "Ivan", "label": "Ivan", "shape": "dot", "size": 2}, {"bipartite": 0, "font": {"color": "white"}, "group": 3, "id": "Javascript", "label": "Javascript", "shape": "dot", "size": 7}, {"bipartite": 1, "font": {"color": "white"}, "group": 3, "id": "Judy", "label": "Judy", "shape": "dot", "size": 7}, {"bipartite": 1, "font": {"color": "white"}, "group": 3, "id": "Peggy", "label": "Peggy", "shape": "dot", "size": 2}, {"bipartite": 1, "font": {"color": "white"}, "group": 3, "id": "Mike", "label": "Mike", "shape": "dot", "size": 3}, {"bipartite": 0, "font": {"color": "white"}, "group": 0, "id": "SQL", "label": "SQL", "shape": "dot", "size": 7}, {"bipartite": 1, "font": {"color": "white"}, "group": 0, "id": "Hannah", "label": "Hannah", "shape": "dot", "size": 2}]);
+                  edges = new vis.DataSet([{"capacity": 8.0, "from": "Python", "to": "Alice", "width": 1}, {"capacity": 6.0, "from": "Python", "to": "Bob", "width": 1}, {"capacity": 9.0, "from": "Python", "to": "Charlie", "width": 1}, {"capacity": 7.0, "from": "Python", "to": "David", "width": 1}, {"capacity": 8.0, "from": "Python", "to": "Eve", "width": 1}, {"capacity": 5.0, "from": "Python", "to": "Frank", "width": 1}, {"capacity": 8.0, "from": "Python", "to": "Ralph", "width": 1}, {"capacity": 5.0, "from": "Java", "to": "Lily", "width": 1}, {"capacity": 6.0, "from": "Java", "to": "Karl", "width": 1}, {"capacity": 9.0, "from": "Java", "to": "Charlie", "width": 1}, {"capacity": 7.0, "from": "Java", "to": "David", "width": 1}, {"capacity": 8.0, "from": "Java", "to": "Eve", "width": 1}, {"capacity": 8.0, "from": "Java", "to": "Quinn", "width": 1}, {"capacity": 6.0, "from": "Java", "to": "Grace", "width": 1}, {"capacity": 8.0, "from": "C++", "to": "Alice", "width": 1}, {"capacity": 6.0, "from": "C++", "to": "Bob", "width": 1}, {"capacity": 7.0, "from": "C++", "to": "Nancy", "width": 1}, {"capacity": 6.0, "from": "C++", "to": "Oscar", "width": 1}, {"capacity": 8.0, "from": "C++", "to": "Eve", "width": 1}, {"capacity": 5.0, "from": "C++", "to": "Frank", "width": 1}, {"capacity": 9.0, "from": "C++", "to": "Ivan", "width": 1}, {"capacity": 8.0, "from": "Javascript", "to": "Judy", "width": 1}, {"capacity": 6.0, "from": "Javascript", "to": "Bob", "width": 1}, {"capacity": 9.0, "from": "Javascript", "to": "Charlie", "width": 1}, {"capacity": 7.0, "from": "Javascript", "to": "David", "width": 1}, {"capacity": 9.0, "from": "Javascript", "to": "Peggy", "width": 1}, {"capacity": 8.0, "from": "Javascript", "to": "Mike", "width": 1}, {"capacity": 6.0, "from": "Javascript", "to": "Grace", "width": 1}, {"capacity": 8.0, "from": "SQL", "to": "Alice", "width": 1}, {"capacity": 8.0, "from": "SQL", "to": "Mike", "width": 1}, {"capacity": 9.0, "from": "SQL", "to": "Charlie", "width": 1}, {"capacity": 7.0, "from": "SQL", "to": "David", "width": 1}, {"capacity": 8.0, "from": "SQL", "to": "Eve", "width": 1}, {"capacity": 5.0, "from": "SQL", "to": "Frank", "width": 1}, {"capacity": 8.0, "from": "SQL", "to": "Hannah", "width": 1}, {"from": "Alice", "to": "Bob", "weights": 0.1, "width": 1}, {"from": "Alice", "to": "Charlie", "weights": 0.5, "width": 1}, {"from": "Alice", "to": "David", "weights": 0.3, "width": 1}, {"from": "Alice", "to": "Eve", "weights": 0.4, "width": 1}, {"from": "Alice", "to": "Frank", "weights": 0.9, "width": 1}, {"from": "Alice", "to": "Ralph", "weights": 0.4, "width": 1}, {"from": "Grace", "to": "Lily", "weights": 0.2, "width": 1}, {"from": "Hannah", "to": "Judy", "weights": 0.6, "width": 1}, {"from": "Ivan", "to": "Judy", "weights": 0.8, "width": 1}, {"from": "Judy", "to": "Mike", "weights": 0.8, "width": 1}, {"from": "Judy", "to": "Peggy", "weights": 0.3, "width": 1}, {"from": "Judy", "to": "Oscar", "weights": 0.6, "width": 1}, {"from": "Judy", "to": "Quinn", "weights": 0.5, "width": 1}, {"from": "Karl", "to": "Lily", "weights": 0.7, "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
